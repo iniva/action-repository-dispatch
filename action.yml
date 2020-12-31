@@ -9,7 +9,7 @@ inputs:
   targetRepository:
     description: Full name (owner/repo-name) of the repository that will receive the repository_dispatch event
     required: false
-    default: ${{ github.respository }}
+    default: ${{ github.repository }}
 
   eventType:
     description: Custom event type expected by the receiving repository
