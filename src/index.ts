@@ -32,7 +32,7 @@ async function run(): Promise<void> {
       client_payload: clientPayload
     })
 
-    core.info(`Event [${eventType}] dispatched to [${owner}/${targetRepository}]`)
+    core.info(`Event [${eventType}] dispatched to [${targetRepository}]`)
   } catch (e) {
     core.setFailed(e.message)
   }

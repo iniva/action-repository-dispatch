@@ -35,7 +35,7 @@ async function run() {
             event_type: eventType,
             client_payload: clientPayload
         });
-        core.info(`Event [${eventType}] dispatched to [${owner}/${targetRepository}]`);
+        core.info(`Event [${eventType}] dispatched to [${targetRepository}]`);
     }
     catch (e) {
         core.setFailed(e.message);
