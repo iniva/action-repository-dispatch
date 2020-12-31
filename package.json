@@ -1,0 +1,46 @@
+{
+  "name": "action-repository-dispatch",
+  "version": "1.0.0",
+  "description": "Send customized repository_dispatch events",
+  "main": "dist/index.js",
+  "author": {
+    "name": "Tony DBR",
+    "email": "tonyblast@gmail.com"
+  },
+  "license": "MIT",
+  "repository": "git@github.com:iniva/action-repository-dispatch.git",
+  "scripts": {
+    "test:lint": "eslint . --ext .ts",
+    "build": "rm -rf ./dist && tsc && ncc build",
+    "release": "SKIP_PREPARE_COMMIT=true standard-version",
+    "release:dry": "SKIP_PREPARE_COMMIT=true standard-version --dry-run"
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "test $SKIP_PREPARE_COMMIT || (exec < /dev/tty && git cz --hook || true)",
+      "pre-push": "npm run test:lint"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
+    "@vercel/ncc": "^0.26.1",
+    "commitizen": "^4.2.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.16.0",
+    "husky": "^4.3.6",
+    "standard-version": "^9.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  }
+}

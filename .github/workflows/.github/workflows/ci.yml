@@ -1,0 +1,24 @@
+name: CI
+
+# This event is triggered on pushes to master & PRs to all branches
+on:
+  pull_request:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  self-test:
+    name: Self Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Cloning repository
+
+      - uses: ./
+        name: Dispatch Event
+        id: dispatch_action
+        with:
+          eventType: 'test_dispatch'
+          token: ${{ secrets.REPO_PAT }}
+          payload: '{"requested_by": "${{github.actor}}"}'

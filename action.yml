@@ -1,0 +1,29 @@
+name: Repository Dispatch
+author: 'Tony DBR'
+description: Send customized repository_dispatch events
+branding:
+  color: red
+  icon: send
+
+inputs:
+  targetRepository:
+    description: Full name (owner/repo-name) of the repository that will receive the repository_dispatch event
+    required: false
+    default: ${{ github.respository }}
+
+  eventType:
+    description: Custom event type expected by the receiving repository
+    required: true
+
+  token:
+    description: A GitHub Personal Access Token (PAT) with 'repo' permissions
+    required: true
+
+  payload:
+    description: Stringified JSON payload
+    required: false
+    default: '{}'
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
