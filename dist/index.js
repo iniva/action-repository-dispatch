@@ -8,6 +8,7 @@ module.exports =
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const util_1 = __webpack_require__(669);
 const core = __webpack_require__(186);
 const github_1 = __webpack_require__(438);
 async function run() {
@@ -38,6 +39,7 @@ async function run() {
         core.info(`Event [${eventType}] dispatched to [${targetRepository}]`);
     }
     catch (e) {
+        core.debug(util_1.inspect(e));
         core.setFailed(e.message);
     }
 }

@@ -1,3 +1,4 @@
+import { inspect } from 'util'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
 
@@ -34,6 +35,7 @@ async function run(): Promise<void> {
 
     core.info(`Event [${eventType}] dispatched to [${targetRepository}]`)
   } catch (e) {
+    core.debug(inspect(e))
     core.setFailed(e.message)
   }
 }

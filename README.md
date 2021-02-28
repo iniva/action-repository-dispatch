@@ -6,6 +6,7 @@
 - [Usage](#usage)
   - [Inputs](#inputs)
     - [(*) token](#-token)
+- [DEBUG](#debug)
 
 # Usage
 > :information_source: Check the [ci workflow](.github/workflows/ci.yml) in this repo to see a live example on how to use this action in your own workflow
@@ -31,3 +32,8 @@
  :information_source: If you are targeting:
   - **Public repository**: The PAT only needs `public_repo` scope
   - **Private repository**: The PAT needs `repo` scope and its owner needs `write` access in the target repository
+
+# DEBUG
+To enable step debug logging, set the following secret in the repository that's running the workflow:
+- Secret name: `ACTIONS_STEP_DEBUG`
+- value: `true`
