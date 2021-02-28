@@ -1,4 +1,4 @@
-name: Repository Dispatch
+name: Action Repository Dispatch
 author: 'Tony DBR'
 description: Send customized repository_dispatch events
 branding:
