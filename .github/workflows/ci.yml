@@ -125,4 +125,4 @@ jobs:
           eventType: 'test_dispatch'
           token: ${{ secrets.REPO_PAT }}
           payloadType: url
-          payloadUrl: https://raw.githubusercontent.com/iniva/action-repository-dispatch/support-more-payload-resources/test/files/valid.json
+          payloadUrl: https://raw.githubusercontent.com/iniva/action-repository-dispatch/main/test/files/valid.json
