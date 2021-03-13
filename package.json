@@ -11,10 +11,28 @@
   "repository": "git@github.com:iniva/action-repository-dispatch.git",
   "scripts": {
     "test:unit": "mocha --ui bdd --recursive --timeout 10000 --require ts-node/register \"test/*.ts\"",
+    "test:cover": "nyc mocha --ui bdd --recursive --timeout 10000 --require ts-node/register \"test/*.ts\"",
     "test:lint": "eslint . --ext .ts",
     "build": "rm -rf ./dist && tsc && ncc build",
     "release": "SKIP_PREPARE_COMMIT=true standard-version",
     "release:dry": "SKIP_PREPARE_COMMIT=true standard-version --dry-run"
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "lcov",
+      "html"
+    ]
   },
   "husky": {
     "hooks": {
@@ -48,6 +66,7 @@
     "husky": "^4.3.6",
     "mocha": "^8.3.2",
     "nock": "^13.0.11",
+    "nyc": "^15.1.0",
     "standard-version": "^9.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
