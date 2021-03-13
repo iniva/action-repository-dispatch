@@ -78,6 +78,7 @@ jobs:
         continue-on-error: false
 
   self-test:
+    needs: tests
     name: Self Test
     runs-on: ubuntu-latest
     steps:
