@@ -23,10 +23,20 @@
 - `token`: A GitHub Personal Access Token (PAT) ([more info](#-token))
   - required: `true`
 
-- `payload`: Stringified JSON payload
-    - required: `false`
-    - default: `'{}'`
+- `payloadType`: Type of payload provided. Types: `string`, `path`, `url`
+  - required: `false`
+  - default: `'string'`
+
+- `payload`: Stringified JSON payload. Expected when payloadType is not provided or provided as `"string"`
+  - required: `false`
+  - default: `'{}'`
     - example: `'{"customField": "some value", "anotherField": "another value"}'`
+
+- `payloadPath`: Path to file with JSON payload. Expected when payloadType is provided as `"path"`
+    - required: `false`
+
+- `payloadUrl`: URL to JSON payload. Expected when payloadType is provided as `"url"`
+    - required: `false`
 
  ### (*) token
  :information_source: If you are targeting:

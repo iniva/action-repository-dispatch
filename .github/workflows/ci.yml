@@ -8,8 +8,78 @@ on:
       - '*'
 
 jobs:
-  self-test:
-    name: Self Test
+  prepare:
+    name: Preparing pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Cloning repository
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Getting cache for node_modules
+        id: yarn-cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - uses: actions/setup-node@v1
+        name: Setting Node.js Version
+        with:
+          node-version: '12.x'
+
+      - name: Installing dependencies
+        run: yarn install --frozen-lockfile
+        continue-on-error: false
+
+  tests:
+    needs: prepare
+    strategy:
+      matrix:
+        # Creates jobs for each element in the matrix
+        test: ['unit', 'lint', 'cover']
+      # Let individual jobs in the matrix fail without canceling all jobs
+      fail-fast: false
+    name: ${{ matrix.test }} tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Cloning repository
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Getting cache for node_modules
+        id: yarn-cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - uses: actions/setup-node@v1
+        name: Setting Node.js Version
+        with:
+          node-version: '12.x'
+
+      - name: Installing dependencies
+        run: yarn install --frozen-lockfile
+        continue-on-error: false
+
+      - name: Running ${{ matrix.test }} tests
+        run: yarn test:${{ matrix.test }}
+        continue-on-error: false
+
+  dispatch-string:
+    needs: tests
+    name: Dispatch using stringified payload
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,3 +92,37 @@ jobs:
           eventType: 'test_dispatch'
           token: ${{ secrets.REPO_PAT }}
           payload: '{"requested_by": "${{github.actor}}"}'
+
+  dispatch-path:
+    needs: tests
+    name: Dispatch using file path payload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Cloning repository
+
+      - uses: ./
+        name: Dispatch Event
+        id: dispatch_action
+        with:
+          eventType: 'test_dispatch'
+          token: ${{ secrets.REPO_PAT }}
+          payloadType: path
+          payloadPath: test/files/valid.json
+
+  dispatch-url:
+    needs: tests
+    name: Dispatch using file URL payload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Cloning repository
+
+      - uses: ./
+        name: Dispatch Event
+        id: dispatch_action
+        with:
+          eventType: 'test_dispatch'
+          token: ${{ secrets.REPO_PAT }}
+          payloadType: url
+          payloadUrl: https://raw.githubusercontent.com/iniva/action-repository-dispatch/support-more-payload-resources/test/files/valid.json

@@ -19,10 +19,24 @@ inputs:
     description: A GitHub Personal Access Token (PAT) with 'repo' permissions
     required: true
 
+  payloadType:
+    description: "Type of payload provided. Types: string, path, url"
+    required: false
+    default: 'string'
+
   payload:
-    description: Stringified JSON payload
+    description: Stringified JSON payload. Expected when payloadType is not provided or provided as "string"
     required: false
     default: '{}'
+
+  payloadPath:
+    description: Path to file with JSON payload. Expected when payloadType is provided as "path"
+    required: false
+
+  payloadUrl:
+    description: URL to JSON payload. Expected when payloadType is provided as "url"
+    required: false
+
 
 runs:
   using: 'node12'
