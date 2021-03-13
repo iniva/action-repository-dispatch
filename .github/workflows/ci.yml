@@ -109,3 +109,20 @@ jobs:
           token: ${{ secrets.REPO_PAT }}
           payloadType: path
           payloadPath: test/files/valid.json
+
+  dispatch-url:
+    needs: tests
+    name: Dispatch using file URL payload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Cloning repository
+
+      - uses: ./
+        name: Dispatch Event
+        id: dispatch_action
+        with:
+          eventType: 'test_dispatch'
+          token: ${{ secrets.REPO_PAT }}
+          payloadType: url
+          payloadUrl: https://raw.githubusercontent.com/iniva/action-repository-dispatch/support-more-payload-resources/test/files/valid.json
