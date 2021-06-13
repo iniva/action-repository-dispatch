@@ -41,7 +41,7 @@ async function run(): Promise<void> {
 
     const octokitClient = getOctokit(token)
 
-    await octokitClient.repos.createDispatchEvent({
+    await octokitClient.rest.repos.createDispatchEvent({
       owner,
       repo: repository,
       event_type: eventType,
