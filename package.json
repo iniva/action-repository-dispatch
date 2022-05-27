@@ -15,7 +15,8 @@
     "test:lint": "eslint . --ext .ts",
     "build": "rm -rf ./dist && tsc && ncc build",
     "release": "SKIP_PREPARE_COMMIT=true standard-version",
-    "release:dry": "SKIP_PREPARE_COMMIT=true standard-version --dry-run"
+    "release:dry": "SKIP_PREPARE_COMMIT=true standard-version --dry-run",
+    "prepare": "husky install"
   },
   "nyc": {
     "all": true,
@@ -34,12 +35,6 @@
       "html"
     ]
   },
-  "husky": {
-    "hooks": {
-      "prepare-commit-msg": "test $SKIP_PREPARE_COMMIT || (exec < /dev/tty && git cz --hook || true)",
-      "pre-push": "yarn test:lint"
-    }
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
@@ -53,18 +48,18 @@
   "devDependencies": {
     "@types/chai": "^4.3.1",
     "@types/chai-as-promised": "^7.1.5",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "^12.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
-    "@vercel/ncc": "^0.28.6",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "14.18.18",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "@vercel/ncc": "^0.34.0",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.28.0",
-    "husky": "^4.3.6",
-    "mocha": "^9.0.0",
+    "eslint": "^8.16.0",
+    "husky": "^8.0.0",
+    "mocha": "^10.0.0",
     "nock": "^13.2.4",
     "nyc": "^15.1.0",
     "standard-version": "^9.5.0",
