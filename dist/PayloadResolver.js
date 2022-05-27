@@ -18,8 +18,8 @@ class PayloadResolver {
     static async fromPath(path) {
         let content;
         try {
-            const filePath = path_1.resolve(process_1.cwd(), path);
-            const asyncReadFile = util_1.promisify(fs_1.readFile);
+            const filePath = (0, path_1.resolve)((0, process_1.cwd)(), path);
+            const asyncReadFile = (0, util_1.promisify)(fs_1.readFile);
             content = await asyncReadFile(filePath, { encoding: 'utf8' });
         }
         catch (error) {
@@ -34,7 +34,7 @@ class PayloadResolver {
     }
     static async fromUrl(url) {
         try {
-            const response = await got_1.default(url, { responseType: 'json' });
+            const response = await (0, got_1.default)(url, { responseType: 'json' });
             return response.body;
         }
         catch (error) {
