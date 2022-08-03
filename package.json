@@ -43,7 +43,7 @@
   "dependencies": {
     "@actions/core": "^1.9.0",
     "@actions/github": "^5.0.3",
-    "got": "^11.8.2"
+    "got": "^12.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.1",
@@ -51,13 +51,13 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "14.18.18",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.5",
+    "@typescript-eslint/parser": "^5.32.0",
     "@vercel/ncc": "^0.34.0",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "husky": "^8.0.0",
     "mocha": "^10.0.0",
     "nock": "^13.2.8",
