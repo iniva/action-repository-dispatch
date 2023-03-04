@@ -1,7 +1,7 @@
 import 'mocha'
-import * as chai from 'chai'
-import * as chaiAsPromised from 'chai-as-promised'
-import * as nock from 'nock'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+import nock from 'nock'
 
 import { PayloadResolver } from '../src/PayloadResolver'
 

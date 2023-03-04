@@ -12,7 +12,7 @@ describe('PayloadType', () => {
       'random'
     ]
 
-    invalidValues.forEach(value => {
+    invalidValues.forEach((value: any) => {
       expect(() => PayloadType.createFrom(value))
         .to.throw(Error)
         .with.property('message', `[${value}] is an invalid payload type. Valid: string, path, url`)
