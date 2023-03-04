@@ -2,17 +2,19 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 9545:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PayloadResolver = void 0;
-const fs_1 = __nccwpck_require__(7147);
+const promises_1 = __nccwpck_require__(3977);
 const path_1 = __nccwpck_require__(1017);
-const got_1 = __nccwpck_require__(3061);
+const got_1 = __importDefault(__nccwpck_require__(3061));
 const process_1 = __nccwpck_require__(7282);
-const util_1 = __nccwpck_require__(3837);
 class PayloadResolver {
     static fromString(payload) {
         try {
@@ -26,8 +28,7 @@ class PayloadResolver {
         let content;
         try {
             const filePath = (0, path_1.resolve)((0, process_1.cwd)(), path);
-            const asyncReadFile = (0, util_1.promisify)(fs_1.readFile);
-            content = await asyncReadFile(filePath, { encoding: 'utf8' });
+            content = await (0, promises_1.readFile)(filePath, { encoding: 'utf8' });
         }
         catch (error) {
             throw new Error(`An error ocurred while reading the payload from ${path}: ${error.message}`);
@@ -65,10 +66,6 @@ exports.PayloadResolver = PayloadResolver;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PayloadType = void 0;
 class PayloadType {
-    _type;
-    static STRING = 'string';
-    static PATH = 'path';
-    static URL = 'url';
     constructor(_type) {
         this._type = _type;
     }
@@ -97,6 +94,89 @@ class PayloadType {
     }
 }
 exports.PayloadType = PayloadType;
+PayloadType.STRING = 'string';
+PayloadType.PATH = 'path';
+PayloadType.URL = 'url';
+
+
+/***/ }),
+
+/***/ 9283:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const util_1 = __nccwpck_require__(3837);
+const core = __importStar(__nccwpck_require__(2186));
+const github_1 = __nccwpck_require__(5438);
+const PayloadResolver_1 = __nccwpck_require__(9545);
+const PayloadType_1 = __nccwpck_require__(2656);
+async function run() {
+    try {
+        // Get values from inputs
+        const targetRepository = core.getInput('targetRepository');
+        const eventType = core.getInput('eventType', { required: true });
+        const token = core.getInput('token', { required: true });
+        const payloadType = core.getInput('payloadType');
+        const payload = core.getInput('payload');
+        const payloadPath = core.getInput('payloadPath');
+        const payloadUrl = core.getInput('payloadUrl');
+        if (targetRepository.split('/').length < 2) {
+            throw new Error(`Invalid repository name [${targetRepository}]. Expected format: owner/repo-name`);
+        }
+        const [owner, repository] = targetRepository.split('/');
+        const type = PayloadType_1.PayloadType.createFrom(payloadType);
+        let clientPayload;
+        switch (true) {
+            case type.isString():
+                clientPayload = PayloadResolver_1.PayloadResolver.fromString(payload);
+                break;
+            case type.isPath():
+                clientPayload = await PayloadResolver_1.PayloadResolver.fromPath(payloadPath);
+                break;
+            case type.isURL():
+                clientPayload = await PayloadResolver_1.PayloadResolver.fromUrl(payloadUrl);
+                break;
+        }
+        const octokitClient = (0, github_1.getOctokit)(token);
+        await octokitClient.rest.repos.createDispatchEvent({
+            owner,
+            repo: repository,
+            event_type: eventType,
+            client_payload: clientPayload
+        });
+        core.info(`Event [${eventType}] dispatched to [${targetRepository}]`);
+    }
+    catch (e) {
+        core.debug((0, util_1.inspect)(e));
+        core.setFailed(e.message);
+    }
+}
+run();
 
 
 /***/ }),
@@ -17739,6 +17819,14 @@ module.exports = require("net");
 
 /***/ }),
 
+/***/ 3977:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs/promises");
+
+/***/ }),
+
 /***/ 2037:
 /***/ ((module) => {
 
@@ -17857,63 +17945,12 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-var exports = __webpack_exports__;
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const util_1 = __nccwpck_require__(3837);
-const core = __nccwpck_require__(2186);
-const github_1 = __nccwpck_require__(5438);
-const PayloadResolver_1 = __nccwpck_require__(9545);
-const PayloadType_1 = __nccwpck_require__(2656);
-async function run() {
-    try {
-        // Get values from inputs
-        const targetRepository = core.getInput('targetRepository');
-        const eventType = core.getInput('eventType', { required: true });
-        const token = core.getInput('token', { required: true });
-        const payloadType = core.getInput('payloadType');
-        const payload = core.getInput('payload');
-        const payloadPath = core.getInput('payloadPath');
-        const payloadUrl = core.getInput('payloadUrl');
-        if (targetRepository.split('/').length < 2) {
-            throw new Error(`Invalid repository name [${targetRepository}]. Expected format: owner/repo-name`);
-        }
-        const [owner, repository] = targetRepository.split('/');
-        const type = PayloadType_1.PayloadType.createFrom(payloadType);
-        let clientPayload;
-        switch (true) {
-            case type.isString():
-                clientPayload = PayloadResolver_1.PayloadResolver.fromString(payload);
-                break;
-            case type.isPath():
-                clientPayload = await PayloadResolver_1.PayloadResolver.fromPath(payloadPath);
-                break;
-            case type.isURL():
-                clientPayload = await PayloadResolver_1.PayloadResolver.fromUrl(payloadUrl);
-                break;
-        }
-        const octokitClient = (0, github_1.getOctokit)(token);
-        await octokitClient.rest.repos.createDispatchEvent({
-            owner,
-            repo: repository,
-            event_type: eventType,
-            client_payload: clientPayload
-        });
-        core.info(`Event [${eventType}] dispatched to [${targetRepository}]`);
-    }
-    catch (e) {
-        core.debug((0, util_1.inspect)(e));
-        core.setFailed(e.message);
-    }
-}
-run();
-
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(9283);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;

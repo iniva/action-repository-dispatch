@@ -1,11 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PayloadResolver = void 0;
-const fs_1 = require("fs");
+const promises_1 = require("node:fs/promises");
 const path_1 = require("path");
-const got_1 = require("got");
+const got_1 = __importDefault(require("got"));
 const process_1 = require("process");
-const util_1 = require("util");
 class PayloadResolver {
     static fromString(payload) {
         try {
@@ -19,8 +21,7 @@ class PayloadResolver {
         let content;
         try {
             const filePath = (0, path_1.resolve)((0, process_1.cwd)(), path);
-            const asyncReadFile = (0, util_1.promisify)(fs_1.readFile);
-            content = await asyncReadFile(filePath, { encoding: 'utf8' });
+            content = await (0, promises_1.readFile)(filePath, { encoding: 'utf8' });
         }
         catch (error) {
             throw new Error(`An error ocurred while reading the payload from ${path}: ${error.message}`);
