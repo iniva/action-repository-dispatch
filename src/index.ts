@@ -49,7 +49,7 @@ async function run(): Promise<void> {
     })
 
     core.info(`Event [${eventType}] dispatched to [${targetRepository}]`)
-  } catch (e) {
+  } catch (e: any) {
     core.debug(inspect(e))
     core.setFailed(e.message)
   }
