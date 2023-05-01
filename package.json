@@ -57,7 +57,7 @@
     "chai-as-promised": "^7.1.1",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.35.0",
+    "eslint": "^8.39.0",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "nock": "^13.3.0",
