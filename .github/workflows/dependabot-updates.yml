@@ -6,8 +6,16 @@ on:
     branches:
       - 'main'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 env:
   DEPENDABOT_BRANCH: dependabot-updates
+  WF_RUN_ID: ${{ github.run_id }}
+  GH_WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  AUTHOR_NAME: ${{ github.event.pusher.name }}
+  AUTHOR_EMAIL: ${{ github.event.pusher.email }}
 
 jobs:
   decision:
@@ -31,30 +39,30 @@ jobs:
 
   create:
     needs: decision
-    if: ${{ needs.decision.outputs.action == 'create' }}
+    if: needs.decision.outputs.action == 'create'
     name: Create branch
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Cloning "main" branch
         with:
           ref: 'main'
 
       - name: Creating branch
         run: |
-          echo "Creating '${DEPENDABOT_BRANCH}' branch"
-          git checkout -b ${DEPENDABOT_BRANCH}
+          echo "Creating '${{ env.DEPENDABOT_BRANCH }}' branch"
+          git checkout -b ${{ env.DEPENDABOT_BRANCH }}
 
-          echo "Pushing '${DEPENDABOT_BRANCH}' branch"
-          git push origin ${DEPENDABOT_BRANCH}
+          echo "Pushing '${{ env.DEPENDABOT_BRANCH }}' branch"
+          git push origin ${{ env.DEPENDABOT_BRANCH }}
 
   update:
     needs: decision
-    if: ${{ needs.decision.outputs.action == 'update' }}
+    if: needs.decision.outputs.action == 'update'
     name: Update branch
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Cloning all branches for this repository
         with:
           fetch-depth: 0

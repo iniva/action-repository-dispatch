@@ -13,6 +13,7 @@
     "test:unit": "mocha --ui bdd --recursive --timeout 10000 --require ts-node/register \"test/*.ts\"",
     "test:cover": "nyc mocha --ui bdd --recursive --timeout 10000 --require ts-node/register \"test/*.ts\"",
     "test:lint": "eslint . --ext .ts",
+    "test:typecheck": "tsc --noEmit",
     "build": "rm -rf ./dist && tsc && ncc build",
     "release": "SKIP_PREPARE_COMMIT=true standard-version",
     "release:dry": "SKIP_PREPARE_COMMIT=true standard-version --dry-run",
