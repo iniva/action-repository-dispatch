@@ -1,4 +1,1 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-yarn test:lint
+npm run test:lint && npm run test:typecheck
