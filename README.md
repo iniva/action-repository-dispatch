@@ -2,6 +2,7 @@
 ![CI](https://github.com/iniva/action-repository-dispatch/workflows/CI/badge.svg)
 
 # Action: Repository Dispatch <!-- omit in toc -->
+Send customized `repository_dispatch` events
 
 - [Usage](#usage)
   - [Inputs](#inputs)
@@ -9,7 +10,7 @@
 - [DEBUG](#debug)
 
 # Usage
-> :information_source: Check the [ci workflow](.github/workflows/ci.yml) in this repo to see a live example on how to use this action in your own workflow
+:information_source: Check the [ci workflow](.github/workflows/ci.yml) in this repo to see a live example on how to use this action in your own workflow
 
 ## Inputs
 | Input | Description | Required | Default | Comments |
