@@ -1,6 +1,6 @@
 {
   "name": "action-repository-dispatch",
-  "version": "1.1.8",
+  "version": "2.0.0",
   "description": "Send customized repository_dispatch events",
   "main": "dist/index.js",
   "author": {
@@ -10,61 +10,69 @@
   "license": "MIT",
   "repository": "git@github.com:iniva/action-repository-dispatch.git",
   "scripts": {
-    "test:unit": "mocha --ui bdd --recursive --timeout 10000 --require ts-node/register \"test/*.ts\"",
-    "test:cover": "nyc mocha --ui bdd --recursive --timeout 10000 --require ts-node/register \"test/*.ts\"",
-    "test:lint": "eslint . --ext .ts",
-    "test:typecheck": "tsc --noEmit",
     "build": "rm -rf ./dist && tsc && ncc build",
-    "release": "SKIP_PREPARE_COMMIT=true standard-version",
-    "release:dry": "SKIP_PREPARE_COMMIT=true standard-version --dry-run",
-    "prepare": "husky install"
+    "test:typecheck": "tsc --noEmit",
+    "test:lint": "eslint . --ext .ts",
+    "test:lint:fix": "eslint . --ext .ts --fix",
+    "test:unit": "jest",
+    "test:coverage": "jest --coverage",
+    "prepare": "husky"
   },
-  "nyc": {
-    "all": true,
-    "include": [
-      "src/**/*ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "text",
-      "lcov",
-      "html"
-    ]
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "got": "^11.8.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.14",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vercel/ncc": "^0.38.1",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.4",
+    "jest": "^29.7.0",
+    "nock": "^13.5.4",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1",
-    "got": "^11.8.2"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.3.4",
-    "@types/chai-as-promised": "^7.1.5",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.104",
-    "@typescript-eslint/eslint-plugin": "^5.54.0",
-    "@typescript-eslint/parser": "^5.54.0",
-    "@vercel/ncc": "^0.36.1",
-    "chai": "^4.3.7",
-    "chai-as-promised": "^7.1.1",
-    "commitizen": "^4.3.0",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.35.0",
-    "husky": "^8.0.3",
-    "mocha": "^10.2.0",
-    "nock": "^13.3.0",
-    "nyc": "^15.1.0",
-    "standard-version": "^9.5.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "roots": [
+      "."
+    ],
+    "modulePaths": [
+      "<rootDir>/src/"
+    ],
+    "testMatch": [
+      "**/test/**/*.spec.ts"
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.ts"
+    ],
+    "coverageDirectory": "<rootDir>/coverage",
+    "reporters": [["default", {"summaryThreshold": 1}]],
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
   }
 }

@@ -1,7 +1,4 @@
-import 'mocha'
-import { expect } from 'chai'
-
-import { PayloadType } from '../src/PayloadType'
+import { PayloadType } from '../src/payload.type'
 
 describe('PayloadType', () => {
   it('should fail when receiving an invalid payload type', () => {
@@ -14,8 +11,7 @@ describe('PayloadType', () => {
 
     invalidValues.forEach((value: any) => {
       expect(() => PayloadType.createFrom(value))
-        .to.throw(Error)
-        .with.property('message', `[${value}] is an invalid payload type. Valid: string, path, url`)
+        .toThrow(`[${value}] is an invalid payload type. Valid: string, path, url`)
     })
   })
 
@@ -29,17 +25,17 @@ describe('PayloadType', () => {
     validValues.forEach(value => {
       const instance = PayloadType.createFrom(value)
 
-      expect(instance).to.be.instanceof(PayloadType)
-      expect(instance.type).to.be.equal(value)
+      expect(instance).toBeInstanceOf(PayloadType)
+      expect(instance.type).toEqual(value)
     })
   })
 
   describe('Helper methods', () => {
-    context('isString', () => {
+    describe('isString', () => {
       it('should return true when received type is "string"', () => {
         const instance = PayloadType.createFrom('string')
 
-        expect(instance.isString()).to.be.true
+        expect(instance.isString()).toEqual(true)
       })
 
       it('should return false when received type is different from "string"', () => {
@@ -51,16 +47,16 @@ describe('PayloadType', () => {
         values.forEach(value => {
           const instance = PayloadType.createFrom(value)
 
-          expect(instance.isString()).to.be.false
+          expect(instance.isString()).toEqual(false)
         })
       })
     })
 
-    context('isPath', () => {
+    describe('isPath', () => {
       it('should return true when received type is "path"', () => {
         const instance = PayloadType.createFrom('path')
 
-        expect(instance.isPath()).to.be.true
+        expect(instance.isPath()).toEqual(true)
       })
 
       it('should return false when received type is different from "path"', () => {
@@ -72,16 +68,16 @@ describe('PayloadType', () => {
         values.forEach(value => {
           const instance = PayloadType.createFrom(value)
 
-          expect(instance.isPath()).to.be.false
+          expect(instance.isPath()).toEqual(false)
         })
       })
     })
 
-    context('isURL', () => {
+    describe('isURL', () => {
       it('should return true when received type is "url"', () => {
         const instance = PayloadType.createFrom('url')
 
-        expect(instance.isURL()).to.be.true
+        expect(instance.isURL()).toEqual(true)
       })
 
       it('should return false when received type is different from "url"', () => {
@@ -93,7 +89,7 @@ describe('PayloadType', () => {
         values.forEach(value => {
           const instance = PayloadType.createFrom(value)
 
-          expect(instance.isURL()).to.be.false
+          expect(instance.isURL()).toEqual(false)
         })
       })
     })

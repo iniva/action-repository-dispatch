@@ -1,9 +1,9 @@
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
 
-import { PayloadResolver } from './PayloadResolver'
-import { PayloadType } from './PayloadType'
+import { PayloadType } from './payload.type'
+import { PayloadResolverFactory } from './payload-resolver.factory'
 
 async function run(): Promise<void> {
   try {
@@ -12,30 +12,36 @@ async function run(): Promise<void> {
     const eventType = core.getInput('eventType', { required: true })
     const token = core.getInput('token', { required: true })
     const payloadType = core.getInput('payloadType')
-    const payload = core.getInput('payload')
-    const payloadPath = core.getInput('payloadPath')
-    const payloadUrl = core.getInput('payloadUrl')
 
     if (targetRepository.split('/').length < 2) {
-      throw new Error(`Invalid repository name [${targetRepository}]. Expected format: owner/repo-name`)
+      throw new Error(
+        `Invalid repository name [${targetRepository}]. Expected format: owner/repo-name`,
+      )
     }
 
     const [owner, repository] = targetRepository.split('/')
 
     const type = PayloadType.createFrom(payloadType)
+    const payloadResolver = PayloadResolverFactory.getResolverForType(type)
     let clientPayload: any
 
-    switch(true) {
+    switch (true) {
       case type.isString():
-        clientPayload = PayloadResolver.fromString(payload)
+        const payload = core.getInput('payload', { required: true })
+
+        clientPayload = await payloadResolver.resolve(payload)
         break
 
       case type.isPath():
-        clientPayload = await PayloadResolver.fromPath(payloadPath)
+        const payloadPath = core.getInput('payloadPath', { required: true })
+
+        clientPayload = await payloadResolver.resolve(payloadPath)
         break
 
       case type.isURL():
-        clientPayload = await PayloadResolver.fromUrl(payloadUrl)
+        const payloadUrl = core.getInput('payloadUrl', { required: true })
+
+        clientPayload = await payloadResolver.resolve(payloadUrl)
         break
     }
 
@@ -45,7 +51,7 @@ async function run(): Promise<void> {
       owner,
       repo: repository,
       event_type: eventType,
-      client_payload: clientPayload
+      client_payload: clientPayload,
     })
 
     core.info(`Event [${eventType}] dispatched to [${targetRepository}]`)

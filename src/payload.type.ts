@@ -1,18 +1,12 @@
 class PayloadType {
-  private static STRING = 'string'
-  private static PATH = 'path'
-  private static URL = 'url'
+  static STRING = 'string'
+  static PATH = 'path'
+  static URL = 'url'
 
-  private constructor(private _type: string) {
-
-  }
+  private constructor(private _type: string) {}
 
   static createFrom(type: string): PayloadType {
-    const allowed = [
-      this.STRING,
-      this.PATH,
-      this.URL
-    ]
+    const allowed = [this.STRING, this.PATH, this.URL]
 
     if (!allowed.includes(type)) {
       throw new Error(`[${type}] is an invalid payload type. Valid: ${allowed.join(', ')}`)
