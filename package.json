@@ -1,7 +1,7 @@
 {
   "name": "action-repository-dispatch",
   "version": "2.0.0",
-  "description": "Send customized repository_dispatch events",
+  "description": "Send repository_dispatch events with custom payloads",
   "main": "dist/index.js",
   "author": {
     "name": "Tony DBR",

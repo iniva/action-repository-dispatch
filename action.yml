@@ -1,6 +1,6 @@
 name: Action Repository Dispatch
 author: 'Tony DBR'
-description: Send customized repository_dispatch events
+description: Send repository_dispatch events with custom payloads
 branding:
   color: green
   icon: send
@@ -25,16 +25,16 @@ inputs:
     default: 'string'
 
   payload:
-    description: Stringified JSON payload. Expected when payloadType is not provided or provided as "string"
+    description: Stringified JSON payload. Required when payloadType is not provided or provided as "string"
     required: false
     default: '{}'
 
   payloadPath:
-    description: Path to file with JSON payload. Expected when payloadType is provided as "path"
+    description: Path to file with JSON payload. Required when payloadType is provided as "path"
     required: false
 
   payloadUrl:
-    description: URL to JSON payload. Expected when payloadType is provided as "url"
+    description: URL to JSON payload. Required when payloadType is provided as "url"
     required: false
 
 
