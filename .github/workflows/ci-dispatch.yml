@@ -2,7 +2,10 @@ name: CI for Repository Dispatch
 
 on:
   repository_dispatch:
-    types: ['test_dispatch']
+    types: ["test_dispatch"]
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -14,3 +17,13 @@ jobs:
         run: |
           echo "Client Payload"
           echo "$CLIENT_PAYLOAD"
+
+      - name: Validate payload schema
+        env:
+          CLIENT_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          command -v jq >/dev/null 2>&1 || { echo 'jq not found' >&2; exit 1; }
+          echo "$CLIENT_PAYLOAD" | jq -e '.requested_by | length > 0' >/dev/null || {
+            echo "Missing or empty 'requested_by' field" >&2; exit 1;
+          }
+          echo "Payload schema valid"

@@ -1,3 +1,5 @@
+export type ClientPayload = Record<string, unknown>
+
 export interface PayloadResolver {
-  resolve(payload: string): Promise<any>
+  resolve(payload: string): Promise<ClientPayload>
 }

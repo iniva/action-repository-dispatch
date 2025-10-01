@@ -1,21 +1,24 @@
 name: Dependabot Updates
 
-# This event is triggered on pushes to main
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday 06:00 UTC
+
+permissions:
+  contents: write
+  pull-requests: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
 
 env:
   DEPENDABOT_BRANCH: dependabot-updates
   WF_RUN_ID: ${{ github.run_id }}
   GH_WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-  AUTHOR_NAME: ${{ github.event.pusher.name }}
-  AUTHOR_EMAIL: ${{ github.event.pusher.email }}
+  AUTHOR_NAME: GitHub Actions
+  AUTHOR_EMAIL: noreply@github.com
 
 jobs:
   decision:
@@ -23,18 +26,23 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       action: ${{ steps.verification.outputs.action }}
-    env:
-      REPOSITORY: ${{ github.repository }}
     steps:
-      - name: Verifying if dependabot branch exist
+      - name: Check if dependabot branch exists (GitHub API)
         id: verification
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          FOUND=$(git ls-remote https://github.com/${REPOSITORY} --heads origin ${DEPENDABOT_BRANCH})
-
-          if [[ -z ${FOUND} ]]; then
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/branches/${DEPENDABOT_BRANCH}")
+          if [ "$code" = "404" ]; then
             echo "action=create" >> $GITHUB_OUTPUT
-          else
+          elif [ "$code" = "200" ]; then
             echo "action=update" >> $GITHUB_OUTPUT
+          else
+            echo "Unexpected API status code: $code" >&2
+            exit 1
           fi
 
   create:
@@ -44,17 +52,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        name: Cloning "main" branch
+        name: Checkout main
         with:
-          ref: 'main'
+          ref: main
 
-      - name: Creating branch
+      - name: Create branch
         run: |
-          echo "Creating '${{ env.DEPENDABOT_BRANCH }}' branch"
-          git checkout -b ${{ env.DEPENDABOT_BRANCH }}
-
-          echo "Pushing '${{ env.DEPENDABOT_BRANCH }}' branch"
-          git push origin ${{ env.DEPENDABOT_BRANCH }}
+          set -euo pipefail
+          git checkout -b "${DEPENDABOT_BRANCH}"
+          git push origin "${DEPENDABOT_BRANCH}"
 
   update:
     needs: decision
@@ -63,18 +69,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        name: Cloning all branches for this repository
+        name: Checkout all branches
         with:
           fetch-depth: 0
 
-      - name: Updating branch
+      - name: Update branch
         run: |
-          echo "Switching to '${DEPENDABOT_BRANCH}' branch"
-          git checkout ${DEPENDABOT_BRANCH}
-
-          echo "Merging latest changes from 'main'"
-          git pull origin main
-
-          echo "Pushing to '${DEPENDABOT_BRANCH}' branch"
-          git push origin ${DEPENDABOT_BRANCH}
-
+          set -euo pipefail
+          git checkout "${DEPENDABOT_BRANCH}"
+          git pull --ff-only origin main
+          git push origin "${DEPENDABOT_BRANCH}"
