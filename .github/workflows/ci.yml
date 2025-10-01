@@ -16,7 +16,7 @@ jobs:
     name: Preparing pipeline
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         name: Cloning repository
 
       - name: Get npm cache directory
@@ -52,7 +52,7 @@ jobs:
     name: ${{ matrix.test }} tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         name: Cloning repository
 
       - name: Get npm cache directory
@@ -86,7 +86,7 @@ jobs:
     name: Dispatch using stringified payload
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         name: Cloning repository
 
       - uses: ./
@@ -102,7 +102,7 @@ jobs:
     name: Dispatch using file path payload
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         name: Cloning repository
 
       - uses: ./
@@ -119,7 +119,7 @@ jobs:
     name: Dispatch using file URL payload
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         name: Cloning repository
 
       - uses: ./
