@@ -1,0 +1,27 @@
+{
+  "eslint.useFlatConfig": true,
+  "eslint.workingDirectories": [
+    {
+      "directory": "src"
+    },
+    {
+      "directory": "test"
+    }
+  ],
+  "eslint.probe": [
+    "javascript",
+    "typescript",
+  ],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "files.associations": {
+    "*.ts": "typescript"
+  }
+}

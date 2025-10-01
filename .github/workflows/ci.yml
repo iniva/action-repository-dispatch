@@ -1,132 +1,101 @@
 name: CI
 
-# This event is triggered on pushes & PRs to all branches
 on:
   pull_request:
   push:
     branches:
-      - '*'
+      - main
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  prepare:
-    name: Preparing pipeline
+  tests:
+    name: ${{ matrix.kind }} tests
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [unit, lint, typecheck, coverage]
     steps:
-      - uses: actions/checkout@v4
-        name: Cloning repository
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-
-      - name: Get npm cache
-        uses: actions/cache@v4
-        id: npm-cache
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - uses: actions/setup-node@v4
-        name: Setting Node.js Version
+      - name: Setup Node
+        uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        continue-on-error: false
 
-  tests:
-    needs: prepare
+      - name: Run ${{ matrix.kind }} tests
+        run: npm run test:${{ matrix.kind }}
+
+      - name: Upload coverage artifact
+        if: matrix.kind == 'coverage'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### ${MATRIX_KIND^} Result";
+            echo "Kind: ${{ matrix.kind }}";
+            echo "Status: ${{ job.status }}";
+          } >> $GITHUB_STEP_SUMMARY
+        env:
+          MATRIX_KIND: ${{ matrix.kind }}
+
+  dispatch:
+    name: Dispatch test payloads
+    needs: tests
+    runs-on: ubuntu-latest
+    # Guard execution if prior matrix succeeded and secret exists
+    if: needs.tests.result == 'success'
     strategy:
       matrix:
-        # Creates jobs for each element in the matrix
-        test: ['unit', 'lint', 'typecheck', 'coverage']
-      # Let individual jobs in the matrix fail without canceling all jobs
-      fail-fast: false
-    name: ${{ matrix.test }} tests
-    runs-on: ubuntu-latest
+        variant: [string, path, url]
     steps:
-      - uses: actions/checkout@v4
-        name: Cloning repository
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - name: Check required secret token presence
+        id: secret_check
+        run: |
+          if [ -z "${{ secrets.REPO_PAT }}" ]; then
+            echo "Repository secret REPO_PAT is missing; skipping dispatch." >> $GITHUB_STEP_SUMMARY
+            echo "continue=false" >> $GITHUB_OUTPUT
+          else
+            echo "continue=true" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Get npm cache
-        uses: actions/cache@v4
-        id: npm-cache
+      - name: Skip notice
+        if: steps.secret_check.outputs.continue == 'false'
+        run: echo "Skipping dispatch variant ${{ matrix.variant }} due to missing secret."
+
+      - name: Dispatch (variant = ${{ matrix.variant }})
+        if: steps.secret_check.outputs.continue == 'true'
+        uses: ./
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - uses: actions/setup-node@v4
-        name: Setting Node.js Version
-        with:
-          node-version-file: .nvmrc
-
-      - name: Install dependencies
-        run: npm ci
-        continue-on-error: false
-
-      - name: Running ${{ matrix.test }} tests
-        run: npm run test:${{ matrix.test }}
-        continue-on-error: false
-
-  dispatch-string:
-    needs: tests
-    name: Dispatch using stringified payload
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        name: Cloning repository
-
-      - uses: ./
-        name: Dispatch Event
-        id: dispatch_action
-        with:
-          eventType: 'test_dispatch'
+          eventType: test_dispatch
           token: ${{ secrets.REPO_PAT }}
-          payload: '{"requested_by": "${{github.actor}}"}'
+          payload: ${{ matrix.variant == 'string' && format('{{"requested_by":"{0}"}}', github.actor) || '' }}
+          payloadType: ${{ matrix.variant != 'string' && matrix.variant || '' }}
+          payloadPath: ${{ matrix.variant == 'path' && 'test/files/valid.json' || '' }}
+          payloadUrl: ${{ matrix.variant == 'url' && 'https://raw.githubusercontent.com/iniva/action-repository-dispatch/main/test/files/valid.json' || '' }}
 
-  dispatch-path:
-    needs: tests
-    name: Dispatch using file path payload
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        name: Cloning repository
-
-      - uses: ./
-        name: Dispatch Event
-        id: dispatch_action
-        with:
-          eventType: 'test_dispatch'
-          token: ${{ secrets.REPO_PAT }}
-          payloadType: path
-          payloadPath: test/files/valid.json
-
-  dispatch-url:
-    needs: tests
-    name: Dispatch using file URL payload
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        name: Cloning repository
-
-      - uses: ./
-        name: Dispatch Event
-        id: dispatch_action
-        with:
-          eventType: 'test_dispatch'
-          token: ${{ secrets.REPO_PAT }}
-          payloadType: url
-          payloadUrl: https://raw.githubusercontent.com/iniva/action-repository-dispatch/main/test/files/valid.json
+      - name: Dispatch summary
+        if: always()
+        run: |
+          echo "### Dispatch Variant: ${{ matrix.variant }}" >> $GITHUB_STEP_SUMMARY
+          echo "Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

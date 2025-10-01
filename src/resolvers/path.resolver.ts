@@ -1,24 +1,29 @@
+import { readFile } from 'node:fs/promises'
 import { resolve as pathResolve } from 'node:path'
 import { cwd } from 'node:process'
-import { readFile } from 'node:fs/promises'
 
 import { PayloadResolver } from '../payload.resolver'
+import { wrapError } from '../utils/error'
+import { safeJsonParse, ensureRecord } from '../utils/json'
 
 export class PathResolver implements PayloadResolver {
-  async resolve(path: string): Promise<any> {
+  async resolve(path: string): Promise<Record<string, unknown>> {
     let content: string
 
     try {
       const filePath = pathResolve(cwd(), path)
+
       content = await readFile(filePath, { encoding: 'utf8' })
-    } catch (error: any) {
-      throw new Error(`An error ocurred while reading the payload from ${path}: ${error.message}`)
+    } catch (e: unknown) {
+      throw wrapError(`Failed to read payload file at ${path}`, e)
     }
 
     try {
-      return JSON.parse(content)
-    } catch (error: any) {
-      throw new Error(`An error ocurred while parsing the payload from ${path}: ${error.message}`)
+      const parsed = safeJsonParse<unknown>(content, `Failed to parse JSON from file ${path}`)
+
+      return ensureRecord(parsed, `JSON in file ${path} is not an object`)
+    } catch (e: unknown) {
+      throw wrapError(`Failed to interpret payload from file ${path}`, e)
     }
   }
 }

@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "lib": ["es2021"],
+    "lib": [
+      "ES2023"
+    ],
     "module": "commonjs",
-    "target": "es2021",
-
+    "target": "es2023",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -16,7 +17,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules"

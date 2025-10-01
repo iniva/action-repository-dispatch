@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PayloadType = void 0;
 class PayloadType {
+    _type;
+    static STRING = 'string';
+    static PATH = 'path';
+    static URL = 'url';
     constructor(_type) {
         this._type = _type;
     }
@@ -26,6 +30,4 @@ class PayloadType {
     }
 }
 exports.PayloadType = PayloadType;
-PayloadType.STRING = 'string';
-PayloadType.PATH = 'path';
-PayloadType.URL = 'url';
+//# sourceMappingURL=payload.type.js.map
