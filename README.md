@@ -1,4 +1,4 @@
-![CI](https://github.com/iniva/action-repository-dispatch/workflows/CI/badge.svg)
+[![CI](https://github.com/iniva/action-repository-dispatch/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/iniva/action-repository-dispatch/actions/workflows/ci.yml)
 
 # Repository Dispatch Action <!-- omit in toc -->
 Send `repository_dispatch` events to any repository with a validated JSON payload sourced from a string, a local file path, or a remote URL.
