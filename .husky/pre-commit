@@ -1,1 +1,1 @@
-npm run test:lint && npm run test:typecheck
+pnpm run test:lint && pnpm run test:typecheck
