@@ -16,7 +16,7 @@ updates:
       - "iniva"
     labels:
       - "dependencies"
-      - "npm"
+      - "pnpm"
     commit-message:
       prefix: "chore"
       include: "scope"
