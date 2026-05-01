@@ -113,17 +113,17 @@ Then re-run the workflow. Additional diagnostic info will appear in the Action l
 ## Development
 Local build:
 ```bash
-npm ci
-npm run build
+pnpm install
+pnpm run build
 ```
 Run tests:
 ```bash
-npm test
+pnpm test
 ```
 Lint & typecheck:
 ```bash
-npm run test:lint
-npm run test:typecheck
+pnpm run test:lint
+pnpm run test:typecheck
 ```
 
 The bundled artifact is produced via `@vercel/ncc` from the compiled TypeScript in `dist/`.
