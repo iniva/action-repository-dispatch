@@ -11,8 +11,22 @@ updates:
       day: "sunday"
       timezone: "Europe/Berlin"
       time: "09:00"
+    open-pull-requests-limit: 5
     assignees:
       - "iniva"
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+      minor-and-patch:
+        dependency-type: "production"
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -22,5 +36,13 @@ updates:
       day: "sunday"
       timezone: "Europe/Berlin"
       time: "09:00"
+    open-pull-requests-limit: 5
     assignees:
       - "iniva"
+    labels:
+      - "dependencies"
+      - "github_actions"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    
