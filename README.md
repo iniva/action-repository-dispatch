@@ -118,7 +118,8 @@ pnpm run build
 ```
 Run tests:
 ```bash
-pnpm test
+pnpm test:unit
+pnpm test:coverage
 ```
 Lint & typecheck:
 ```bash
