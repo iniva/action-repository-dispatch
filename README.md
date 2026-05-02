@@ -32,7 +32,7 @@ jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
-      - uses: iniva/action-repository-dispatch@v2
+      - uses: iniva/action-repository-dispatch@v3
         with:
           eventType: trigger_build
           token: ${{ secrets.REPO_PAT }}
@@ -55,7 +55,7 @@ Exactly one source must be provided, determined by `payloadType` (defaults to `s
 
 ### String
 ```yaml
-- uses: iniva/action-repository-dispatch@v2
+- uses: iniva/action-repository-dispatch@v3
   with:
     eventType: test_dispatch
     token: ${{ secrets.REPO_PAT }}
@@ -64,7 +64,7 @@ Exactly one source must be provided, determined by `payloadType` (defaults to `s
 
 ### Path
 ```yaml
-- uses: iniva/action-repository-dispatch@v2
+- uses: iniva/action-repository-dispatch@v3
   with:
     eventType: test_dispatch
     token: ${{ secrets.REPO_PAT }}
@@ -74,7 +74,7 @@ Exactly one source must be provided, determined by `payloadType` (defaults to `s
 
 ### URL
 ```yaml
-- uses: iniva/action-repository-dispatch@v2
+- uses: iniva/action-repository-dispatch@v3
   with:
     eventType: test_dispatch
     token: ${{ secrets.REPO_PAT }}
