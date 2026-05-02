@@ -4,7 +4,7 @@ import { defineConfig } from 'eslint/config'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint'
-import importPlugin from 'eslint-plugin-import'
+import { importX } from 'eslint-plugin-import-x'
 import unusedImportPlugin from 'eslint-plugin-unused-imports'
 import stylistic from '@stylistic/eslint-plugin'
 
@@ -35,7 +35,7 @@ export default defineConfig(
   },
   {
     files: ['**/*.ts'],
-    extends: [importPlugin.flatConfigs.recommended, importPlugin.flatConfigs.typescript],
+    extends: [importX.flatConfigs.recommended, importX.flatConfigs.typescript,],
   },
   {
     settings: {
@@ -46,7 +46,7 @@ export default defineConfig(
   },
   {
     rules: {
-      'import/order': [
+      'import-x/order': [
         'warn',
         {
           groups: [
