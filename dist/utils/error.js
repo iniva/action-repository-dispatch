@@ -1,9 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.WrappedError = void 0;
-exports.getErrorMessage = getErrorMessage;
-exports.wrapError = wrapError;
-function getErrorMessage(error) {
+export function getErrorMessage(error) {
     if (typeof error === 'object' &&
         error !== null &&
         'message' in error &&
@@ -17,7 +12,7 @@ function getErrorMessage(error) {
         return String(error);
     }
 }
-class WrappedError extends Error {
+export class WrappedError extends Error {
     cause;
     constructor(message, cause) {
         super(message);
@@ -25,8 +20,7 @@ class WrappedError extends Error {
         this.name = 'WrappedError';
     }
 }
-exports.WrappedError = WrappedError;
-function wrapError(context, error) {
+export function wrapError(context, error) {
     return new WrappedError(`${context}: ${getErrorMessage(error)}`, error);
 }
 //# sourceMappingURL=error.js.map
