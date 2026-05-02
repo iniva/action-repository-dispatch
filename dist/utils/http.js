@@ -1,10 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParseError = exports.HttpError = void 0;
-exports.fetchJsonObject = fetchJsonObject;
-const error_1 = require("./error");
-const json_1 = require("./json");
-class HttpError extends Error {
+import { wrapError } from './error';
+import { ensureRecord } from './json';
+export class HttpError extends Error {
     status;
     url;
     bodySnippet;
@@ -16,8 +12,7 @@ class HttpError extends Error {
         this.name = 'HttpError';
     }
 }
-exports.HttpError = HttpError;
-class ParseError extends Error {
+export class ParseError extends Error {
     url;
     constructor(url, rawMessage) {
         super(`Failed to parse JSON from ${url}: ${rawMessage}`);
@@ -25,11 +20,10 @@ class ParseError extends Error {
         this.name = 'ParseError';
     }
 }
-exports.ParseError = ParseError;
 function sleep(ms) {
     return new Promise((r) => setTimeout(r, ms));
 }
-async function fetchJsonObject(url, { timeoutMs = 10000, headers = {}, retries = 0, retryDelayMs = 500 } = {}) {
+export async function fetchJsonObject(url, { timeoutMs = 10000, headers = {}, retries = 0, retryDelayMs = 500 } = {}) {
     let attempt = 0;
     let lastError;
     while (attempt <= retries) {
@@ -54,10 +48,10 @@ async function fetchJsonObject(url, { timeoutMs = 10000, headers = {}, retries =
                 throw new ParseError(url, e.message);
             }
             try {
-                return (0, json_1.ensureRecord)(parsed, 'Response JSON is not an object');
+                return ensureRecord(parsed, 'Response JSON is not an object');
             }
             catch (e) {
-                throw (0, error_1.wrapError)('Invalid JSON shape', e);
+                throw wrapError('Invalid JSON shape', e);
             }
         }
         catch (e) {

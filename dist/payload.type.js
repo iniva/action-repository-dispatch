@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PayloadType = void 0;
 class PayloadType {
     _type;
     static STRING = 'string';
@@ -29,5 +26,5 @@ class PayloadType {
         return this._type;
     }
 }
-exports.PayloadType = PayloadType;
+export { PayloadType };
 //# sourceMappingURL=payload.type.js.map
