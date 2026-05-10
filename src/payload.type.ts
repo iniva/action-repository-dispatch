@@ -6,13 +6,13 @@ class PayloadType {
   private constructor(private _type: string) {}
 
   static createFrom(type: string): PayloadType {
-    const allowed = [this.STRING, this.PATH, this.URL];
+    const allowed = [PayloadType.STRING, PayloadType.PATH, PayloadType.URL];
 
     if (!allowed.includes(type)) {
       throw new Error(`[${type}] is an invalid payload type. Valid: ${allowed.join(', ')}`);
     }
 
-    return new this(type);
+    return new PayloadType(type);
   }
 
   isString(): boolean {

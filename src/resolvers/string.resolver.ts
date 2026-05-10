@@ -1,4 +1,4 @@
-import { PayloadResolver } from '../payload.resolver';
+import type { PayloadResolver } from '../payload.resolver';
 import { wrapError } from '../utils/error';
 import { ensureRecord, safeJsonParse } from '../utils/json';
 

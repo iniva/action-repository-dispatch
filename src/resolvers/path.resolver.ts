@@ -2,9 +2,9 @@ import { readFile } from 'node:fs/promises';
 import { resolve as pathResolve } from 'node:path';
 import { cwd } from 'node:process';
 
-import { PayloadResolver } from '../payload.resolver';
+import type { PayloadResolver } from '../payload.resolver';
 import { wrapError } from '../utils/error';
-import { safeJsonParse, ensureRecord } from '../utils/json';
+import { ensureRecord, safeJsonParse } from '../utils/json';
 
 export class PathResolver implements PayloadResolver {
   async resolve(path: string): Promise<Record<string, unknown>> {
