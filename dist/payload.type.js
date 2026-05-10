@@ -7,11 +7,11 @@ class PayloadType {
         this._type = _type;
     }
     static createFrom(type) {
-        const allowed = [this.STRING, this.PATH, this.URL];
+        const allowed = [PayloadType.STRING, PayloadType.PATH, PayloadType.URL];
         if (!allowed.includes(type)) {
             throw new Error(`[${type}] is an invalid payload type. Valid: ${allowed.join(', ')}`);
         }
-        return new this(type);
+        return new PayloadType(type);
     }
     isString() {
         return this._type === PayloadType.STRING;

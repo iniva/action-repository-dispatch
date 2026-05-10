@@ -1,6 +1,6 @@
-import { PayloadResolver } from './payload.resolver';
-import { PayloadType } from './payload.type';
-export declare class PayloadResolverFactory {
-    static getResolverForType(type: PayloadType): PayloadResolver;
-}
+import type { PayloadResolver } from './payload.resolver';
+import type { PayloadType } from './payload.type';
+export declare const PayloadResolverFactory: {
+    getResolverForType(type: PayloadType): PayloadResolver;
+};
 //# sourceMappingURL=payload-resolver.factory.d.ts.map
