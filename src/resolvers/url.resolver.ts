@@ -1,4 +1,4 @@
-import { PayloadResolver } from '../payload.resolver';
+import type { PayloadResolver } from '../payload.resolver';
 import { fetchJsonObject } from '../utils/http';
 
 export class UrlResolver implements PayloadResolver {

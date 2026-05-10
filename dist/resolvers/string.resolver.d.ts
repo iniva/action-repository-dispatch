@@ -1,4 +1,4 @@
-import { PayloadResolver } from '../payload.resolver';
+import type { PayloadResolver } from '../payload.resolver';
 export declare class StringResolver implements PayloadResolver {
     resolve(payload: string): Promise<Record<string, unknown>>;
 }

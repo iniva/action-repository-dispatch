@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve as pathResolve } from 'node:path';
 import { cwd } from 'node:process';
 import { wrapError } from '../utils/error';
-import { safeJsonParse, ensureRecord } from '../utils/json';
+import { ensureRecord, safeJsonParse } from '../utils/json';
 export class PathResolver {
     async resolve(path) {
         let content;

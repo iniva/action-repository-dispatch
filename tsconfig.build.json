@@ -8,13 +8,6 @@
     "sourceMap": true,
     "removeComments": false
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "**/*.spec.ts",
-    "test",
-    "dist",
-    "coverage"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts", "test", "dist", "coverage"]
 }

@@ -1,10 +1,9 @@
+import { inspect } from 'node:util';
 import * as core from '@actions/core';
 import { getOctokit } from '@actions/github';
-import { inspect } from 'node:util';
-
-import { PayloadResolverFactory } from './payload-resolver.factory';
 import type { ClientPayload } from './payload.resolver';
 import { PayloadType } from './payload.type';
+import { PayloadResolverFactory } from './payload-resolver.factory';
 
 async function run(): Promise<void> {
   try {
