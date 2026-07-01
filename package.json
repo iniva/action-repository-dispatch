@@ -29,16 +29,16 @@
     "remove": "^0.1.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.0",
+    "@biomejs/biome": "2.5.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.12.2",
-    "@vercel/ncc": "^0.38.4",
-    "commitizen": "^4.3.1",
+    "@vercel/ncc": "^0.44.1",
+    "commitizen": "^4.3.2",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
-    "nock": "^14.0.14",
-    "ts-jest": "^29.4.9",
+    "nock": "^14.0.16",
+    "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   },
